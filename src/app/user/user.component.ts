@@ -1,8 +1,8 @@
 import { Component, computed, EventEmitter, input, Input, Output, output } from '@angular/core';
 
 interface User {
-  id:string,
-  avatar: string,
+  id:string;
+  avatar: string;
   name:string
 }
 
