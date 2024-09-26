@@ -1,23 +1,26 @@
-import { Component, computed, input } from '@angular/core';
+import { Component, computed, input, signal } from '@angular/core';
 import { TaskComponent } from './task/task.component';
+import { NewTaskComponent } from './new-task/new-task.component';
 
 @Component({
   selector: 'app-tasks',
   standalone: true,
-  imports: [TaskComponent],
+  imports: [TaskComponent, NewTaskComponent],
   templateUrl: './tasks.component.html',
   styleUrl: './tasks.component.css'
 })
 export class TasksComponent {
-  userId = input.required<string>()
-  name = input.required<string>()
-  dummyTasks = [
+  userId = input.required<string>();
+  name = input.required<string>();
+  isAddingTask = false;
+
+  // Use signal for the dummyTasks array
+  dummyTasks = signal([
     {
       id: 't1',
       userId: 'u1',
       title: 'Master Angular',
-      summary:
-        'Learn all the basic and advanced features of Angular & how to apply them.',
+      summary: 'Learn all the basic and advanced features of Angular & how to apply them.',
       dueDate: '2025-12-31',
     },
     {
@@ -31,20 +34,20 @@ export class TasksComponent {
       id: 't3',
       userId: 'u3',
       title: 'Prepare issue template',
-      summary:
-        'Prepare and describe an issue template which will help with project management',
+      summary: 'Prepare and describe an issue template which will help with project management',
       dueDate: '2024-06-15',
     },
-  ]
-  // get selectedUserTasks() {
-  //   return this.dummyTasks.filter(task => task.userId === this.userId())
-  // }
+  ]);
 
   selectedUserTasks = computed(() => {
-    return this.dummyTasks.filter(task => task.userId === this.userId())
-  })
+    return this.dummyTasks().filter(task => task.userId === this.userId());
+  });
 
   onCompleteTask(id: string) {
-    this.dummyTasks = this.dummyTasks.filter((task) => task.id !== id)
+    this.dummyTasks.set(this.dummyTasks().filter(task => task.id !== id));
+  }
+
+  onStartAddTask() {
+    this.isAddingTask = true;
   }
 }
