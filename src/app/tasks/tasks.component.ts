@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 import { TaskComponent } from './task/task.component';
 
 @Component({
@@ -36,7 +36,15 @@ export class TasksComponent {
       dueDate: '2024-06-15',
     },
   ]
-  get selectedUserTasks() {
+  // get selectedUserTasks() {
+  //   return this.dummyTasks.filter(task => task.userId === this.userId())
+  // }
+
+  selectedUserTasks = computed(() => {
     return this.dummyTasks.filter(task => task.userId === this.userId())
+  })
+
+  onCompleteTask(id: string) {
+    this.dummyTasks = this.dummyTasks.filter((task) => task.id !== id)
   }
 }
