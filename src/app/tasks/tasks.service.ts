@@ -27,6 +27,22 @@ export class TasksService {
     },
   ]);
 
+  constructor() {
+    const tasks = localStorage.getItem('tasks')
+    // Check if tasks exist and parse them
+    if (tasks) {
+      try {
+        const parsedTasks = JSON.parse(tasks);
+        if (Array.isArray(parsedTasks)) {
+          // Use the set method to update the signal
+          this.dummyTasks.set(parsedTasks);
+        }
+      } catch (error) {
+        console.error('Error parsing tasks from localStorage:', error);
+      }
+    }
+  }
+
   getUserTasks(userId: string) {
     return this.dummyTasks().filter(task => task.userId === userId);
   }
@@ -41,10 +57,16 @@ export class TasksService {
     }
 
     this.dummyTasks.set([...this.dummyTasks(), newTask])
+    this.saveTasks()
   }
 
   removeTask(id: string) {
     this.dummyTasks.set(this.dummyTasks().filter(task => task.id !== id));
+    this.saveTasks()
+  }
+
+  private saveTasks() {
+    localStorage.setItem('tasks', JSON.stringify(this.dummyTasks()))
   }
 
 
